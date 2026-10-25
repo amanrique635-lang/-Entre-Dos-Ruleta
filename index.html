@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#09050d">
+<title>Entre Dos · Ruleta</title>
+<link rel="stylesheet" href="styles.css?v=3">
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand">ENTRE <span>DOS</span></div>
+    <div id="deckBadge" class="badge">RULETA · 25 RETOS</div>
+  </div>
+
+  <section class="panel setup">
+    <div class="eyebrow">Partida privada</div>
+    <h1>Ruleta de intensidad</h1>
+    <p class="sub">Escriban sus nombres, giren y completen cada reto. Cuando una opción sale, desaparece de la ruleta.</p>
+    <div class="players">
+      <input id="p1" class="input" maxlength="18" placeholder="Jugador 1" autocomplete="off">
+      <input id="p2" class="input" maxlength="18" placeholder="Jugador 2" autocomplete="off">
+    </div>
+  </section>
+
+  <section class="panel main">
+    <div class="turn">
+      <div>
+        <div class="eyebrow">Turno actual</div>
+        <div id="turnName" class="turn-name">Jugador 1</div>
+      </div>
+      <div class="counter">
+        <strong id="remain">25</strong><br>disponibles
+      </div>
+    </div>
+
+    <div class="wheel-zone">
+      <div class="pointer"></div>
+      <div class="wheel-shell">
+        <div id="wheel" class="wheel">
+          <div id="labels" class="wheel-labels"></div>
+        </div>
+        <div class="hub">✦</div>
+      </div>
+    </div>
+
+    <div class="result">
+      <div id="resultType" class="type">Lista para comenzar</div>
+      <h2 id="resultText">Toca “Girar” para sacar el primer reto.</h2>
+      <p id="resultNote">Los números giran con la ruleta y desaparecen cuando son utilizados.</p>
+    </div>
+
+    <div class="actions">
+      <button id="spin" class="btn primary">Girar ruleta</button>
+      <button id="status" class="btn">Estado</button>
+      <button id="editCards" class="btn">Tarjetas</button>
+      <button id="reset" class="btn">Reiniciar</button>
+    </div>
+  </section>
+
+  <section class="panel history">
+    <div class="history-head">
+      <h3>Ya salieron</h3>
+      <div class="history-count"><span id="usedCount">0</span>/<span id="deckCount">25</span></div>
+    </div>
+    <div id="usedList" class="list">
+      <div class="empty">Todavía no ha salido ninguna opción.</div>
+    </div>
+  </section>
+</div>
+
+<div id="statusOverlay" class="overlay">
+  <div class="sheet">
+    <div class="eyebrow">Estado de la partida</div>
+    <h3 id="sheetTitle">Ruleta activa</h3>
+    <p id="sheetText"></p>
+    <div class="stats">
+      <div class="stat">Disponibles<strong id="sheetRemaining">25</strong></div>
+      <div class="stat">Usadas<strong id="sheetUsed">0</strong></div>
+    </div>
+    <button id="closeStatus" class="btn primary close">Continuar</button>
+  </div>
+</div>
+
+<div id="cardsOverlay" class="overlay editor-overlay">
+  <div class="sheet editor-sheet">
+    <div class="editor-head">
+      <div>
+        <div class="eyebrow">Personalizar ruleta</div>
+        <h3>Tarjetas</h3>
+      </div>
+      <button id="closeEditor" class="icon-btn" aria-label="Cerrar">×</button>
+    </div>
+
+    <p class="editor-copy">
+      Puedes editar el título y el reto, eliminar tarjetas o agregar nuevas. Al guardar, la partida se reinicia y la ruleta se numera otra vez desde 1.
+    </p>
+
+    <div id="cardEditorList" class="card-editor-list"></div>
+
+    <button id="addCard" class="btn add-card">+ Agregar tarjeta</button>
+
+    <div class="editor-actions">
+      <button id="restoreCards" class="btn danger-soft">Restaurar originales</button>
+      <button id="saveCards" class="btn primary">Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="app.js?v=3" defer></script>
+</body>
+</html>
