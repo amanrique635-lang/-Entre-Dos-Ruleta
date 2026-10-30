@@ -29,6 +29,7 @@ const defaultCards = [
   {type:"Acariciarse al borde",text:"Colóquense recostados de lado. Masturben al otro simultáneamente y detengan el movimiento cada vez que sientan que la pareja está a punto de llegar al orgasmo."},
   {type:"Final oral intenso",text:"Dedícate a darle sexo oral a tu pareja aumentando la velocidad de las succiones y lametones hasta llevarla al clímax únicamente con tu boca."}
 ];
+
 const STORAGE_DECK = "entreDosRouletteDeckV3";
 const STORAGE_NAMES = "entreDosRouletteNamesV3";
 const palette = [
@@ -388,3 +389,251 @@ $("#restoreCards").addEventListener("click", restoreCards);
 
 loadNames();
 resetGame(false);
+
+// ============================================================
+// NUEVO MODO: RULETA POSICIONES
+// Para agregar una imagen:
+// 1) Sube el archivo a: images/positions/
+// 2) En la tarjeta correspondiente cambia "image" por la ruta del archivo.
+// Ejemplo: image:"images/positions/pose-01.webp"
+// Los nombres y la lógica de la Ruleta juego de arriba no se modifican.
+// ============================================================
+
+const positionCards = [
+  {type:"Frente a frente", text:"Colóquense frente a frente y ajusten la postura usando la imagen como referencia.", image:"images/positions/pose-01.webp"},
+  {type:"De lado", text:"Acomódense de lado siguiendo la orientación mostrada en la imagen de referencia.", image:"images/positions/pose-02.webp"},
+  {type:"Sentados frente a frente", text:"Siéntense frente a frente y reproduzcan la posición de referencia de la forma que les resulte cómoda.", image:"images/positions/pose-03.webp"},
+  {type:"Abrazo por detrás", text:"Colóquense uno detrás del otro y usen la imagen para ajustar la postura.", image:"images/positions/pose-04.webp"},
+  {type:"Reclinados", text:"Recuéstense siguiendo la posición mostrada y adapten el apoyo a su comodidad.", image:"images/positions/pose-05.webp"},
+  {type:"Sentado y frente a frente", text:"Una persona se sienta y la otra se coloca frente a ella siguiendo la referencia.", image:"images/positions/pose-06.webp"},
+  {type:"Cruce de piernas", text:"Acomoden las piernas como se muestra en la imagen y mantengan una postura cómoda.", image:"images/positions/pose-07.webp"},
+  {type:"Al borde", text:"Usen el borde de una superficie estable como apoyo y sigan la postura de referencia.", image:"images/positions/pose-08.webp"},
+  {type:"De espaldas", text:"Colóquense de espaldas siguiendo la orientación de la imagen de referencia.", image:"images/positions/pose-09.webp"},
+  {type:"Arrodillados frente a frente", text:"Colóquense frente a frente a la altura indicada en la imagen y ajusten la postura con comodidad.", image:"images/positions/pose-10.webp"},
+  {type:"Abrazo lateral", text:"Acomódense lado a lado siguiendo la referencia y mantengan el contacto cercano.", image:"images/positions/pose-11.webp"},
+  {type:"Posición libre guiada", text:"Reproduzcan la posición mostrada en la imagen y adáptenla a lo que les resulte cómodo.", image:"images/positions/pose-12.webp"}
+];
+
+let positionAvailable = [];
+let positionUsed = [];
+let positionTurn = 0;
+let positionRotation = 0;
+let positionSpinning = false;
+
+const homeScreen = $("#homeScreen");
+const gameScreen = $("#gameScreen");
+const positionsScreen = $("#positionsScreen");
+const positionWheel = $("#positionWheel");
+const positionLabels = $("#positionLabels");
+const positionSpin = $("#spinPosition");
+const positionRemain = $("#positionRemain");
+const positionTurnName = $("#positionTurnName");
+const positionResultType = $("#positionResultType");
+const positionResultTitle = $("#positionResultTitle");
+const positionResultText = $("#positionResultText");
+const positionUsedList = $("#positionUsedList");
+const positionUsedCount = $("#positionUsedCount");
+const positionDeckCount = $("#positionDeckCount");
+const positionBadge = $("#positionBadge");
+const positionImage = $("#positionImage");
+const positionImagePlaceholder = $("#positionImagePlaceholder");
+const positionImagePath = $("#positionImagePath");
+const positionP1 = $("#positionP1");
+const positionP2 = $("#positionP2");
+
+function showScreen(screen) {
+  homeScreen.hidden = screen !== "home";
+  gameScreen.hidden = screen !== "game";
+  positionsScreen.hidden = screen !== "positions";
+  window.scrollTo({top:0, behavior:"auto"});
+}
+
+function syncPositionNamesFromGame() {
+  positionP1.value = p1.value;
+  positionP2.value = p2.value;
+  updatePositions();
+}
+
+function syncGameNamesFromPositions() {
+  p1.value = positionP1.value;
+  p2.value = positionP2.value;
+  saveNames();
+  update();
+  updatePositions();
+}
+
+function positionNames() {
+  return [positionP1.value.trim() || "Jugador 1", positionP2.value.trim() || "Jugador 2"];
+}
+
+function renderPositionWheel() {
+  positionLabels.innerHTML = "";
+
+  if (!positionAvailable.length) {
+    positionWheel.style.background = "rgba(255,255,255,.035)";
+    positionLabels.innerHTML = '<div class="empty-wheel">Sin opciones</div>';
+    return;
+  }
+
+  const n = positionAvailable.length;
+  const step = 360 / n;
+  const stops = positionAvailable.map((card, index) => {
+    const color = palette[(card.number + 3) % palette.length];
+    return `${color} ${index * step}deg ${(index + 1) * step}deg`;
+  });
+
+  positionWheel.style.background = `conic-gradient(${stops.join(",")})`;
+
+  const radius = n <= 8 ? 38 : n <= 14 ? 41 : 43.5;
+  const fontSize = n <= 10 ? ".78rem" : n <= 18 ? ".68rem" : ".60rem";
+
+  positionAvailable.forEach((card, index) => {
+    const angle = (index + 0.5) * step - 90;
+    const rad = angle * Math.PI / 180;
+    const label = document.createElement("span");
+    label.className = "segment-label";
+    label.textContent = card.number;
+    label.style.fontSize = fontSize;
+    label.style.left = `${50 + Math.cos(rad) * radius}%`;
+    label.style.top = `${50 + Math.sin(rad) * radius}%`;
+    label.style.transform = `translate(-50%,-50%) rotate(${angle + 90}deg)`;
+    positionLabels.appendChild(label);
+  });
+}
+
+function updatePositions() {
+  positionRemain.textContent = positionAvailable.length;
+  positionUsedCount.textContent = positionUsed.length;
+  positionDeckCount.textContent = positionCards.length;
+  positionBadge.textContent = `POSICIONES · ${positionCards.length}`;
+  positionTurnName.textContent = positionNames()[positionTurn];
+
+  if (!positionUsed.length) {
+    positionUsedList.innerHTML = '<div class="empty">Todavía no ha salido ninguna posición.</div>';
+  } else {
+    positionUsedList.innerHTML = positionUsed.map(card =>
+      `<div class="used">#${card.number} · ${escapeHtml(card.type)}</div>`
+    ).join("");
+  }
+}
+
+function clearPositionImage(message = "La imagen aparecerá aquí cuando agregues el archivo correspondiente.") {
+  positionImage.hidden = true;
+  positionImage.removeAttribute("src");
+  positionImagePlaceholder.hidden = false;
+  const small = positionImagePlaceholder.querySelector("small");
+  if (small) small.textContent = message;
+}
+
+function loadPositionImage(card) {
+  clearPositionImage();
+  positionImagePath.textContent = card.image ? `Archivo: ${card.image}` : "Sin imagen configurada";
+
+  if (!card.image) return;
+
+  positionImage.onload = () => {
+    positionImage.hidden = false;
+    positionImagePlaceholder.hidden = true;
+  };
+
+  positionImage.onerror = () => {
+    clearPositionImage(`Falta subir: ${card.image}`);
+    positionImagePath.textContent = `Archivo esperado: ${card.image}`;
+  };
+
+  positionImage.src = `${card.image}?v=1`;
+}
+
+function resetPositions(showMessage = false) {
+  positionAvailable = positionCards.map((card, index) => ({
+    ...card,
+    uid:`position-${index + 1}`,
+    number:index + 1
+  }));
+  positionUsed = [];
+  positionTurn = 0;
+  positionRotation = 0;
+  positionSpinning = false;
+
+  positionWheel.style.transition = "none";
+  positionWheel.style.transform = "rotate(0deg)";
+  void positionWheel.offsetWidth;
+  positionWheel.style.transition = "transform 4.5s cubic-bezier(.12,.75,.16,1)";
+
+  positionResultType.textContent = "Lista para comenzar";
+  positionResultTitle.textContent = "Toca “Girar posición” para comenzar.";
+  positionResultText.textContent = "La posición elegida desaparecerá de la ruleta para que no se repita.";
+  positionImagePath.textContent = "";
+  clearPositionImage();
+  positionSpin.disabled = positionAvailable.length === 0;
+
+  renderPositionWheel();
+  updatePositions();
+  if (showMessage) showToast("Ruleta de posiciones reiniciada");
+}
+
+function spinPositionWheel() {
+  if (positionSpinning || !positionAvailable.length) return;
+
+  positionSpinning = true;
+  positionSpin.disabled = true;
+
+  const currentPlayer = positionNames()[positionTurn];
+  const selectedIndex = Math.floor(Math.random() * positionAvailable.length);
+  const selectedCard = positionAvailable[selectedIndex];
+  const step = 360 / positionAvailable.length;
+  const selectedCenter = (selectedIndex + 0.5) * step;
+  const desiredFinalAngle = normalizeAngle(-selectedCenter);
+  const currentAngle = normalizeAngle(positionRotation);
+  const correction = normalizeAngle(desiredFinalAngle - currentAngle);
+  const extraTurns = 6 + Math.floor(Math.random() * 3);
+
+  positionRotation += extraTurns * 360 + correction;
+
+  positionResultType.textContent = `Girando · Turno de ${currentPlayer}`;
+  positionResultTitle.textContent = "…";
+  positionResultText.textContent = `Buscando una posición entre ${positionAvailable.length} disponibles.`;
+  positionImagePath.textContent = "";
+  clearPositionImage("La referencia aparecerá al terminar el giro.");
+  positionWheel.style.transform = `rotate(${positionRotation}deg)`;
+
+  setTimeout(() => {
+    const liveIndex = positionAvailable.findIndex(card => card.uid === selectedCard.uid);
+    const [card] = positionAvailable.splice(liveIndex, 1);
+    positionUsed.push(card);
+
+    positionResultType.textContent = `#${card.number} · Turno de ${currentPlayer}`;
+    positionResultTitle.textContent = card.type;
+    positionResultText.textContent = card.text;
+    loadPositionImage(card);
+
+    positionTurn = positionTurn === 0 ? 1 : 0;
+    positionSpinning = false;
+    positionSpin.disabled = positionAvailable.length === 0;
+
+    renderPositionWheel();
+    updatePositions();
+  }, 4550);
+}
+
+$("#openGameMode").addEventListener("click", () => showScreen("game"));
+$("#openPositionsMode").addEventListener("click", () => {
+  syncPositionNamesFromGame();
+  showScreen("positions");
+});
+$("#backFromGame").addEventListener("click", () => showScreen("home"));
+$("#backFromPositions").addEventListener("click", () => showScreen("home"));
+$("#spinPosition").addEventListener("click", spinPositionWheel);
+$("#resetPositions").addEventListener("click", () => resetPositions(true));
+
+[positionP1, positionP2].forEach(input => {
+  input.addEventListener("input", syncGameNamesFromPositions);
+});
+
+[p1, p2].forEach(input => {
+  input.addEventListener("input", syncPositionNamesFromGame);
+});
+
+syncPositionNamesFromGame();
+resetPositions(false);
+showScreen("home");
