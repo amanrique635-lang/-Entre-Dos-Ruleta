@@ -4,11 +4,43 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#09050d">
-<title>Entre Dos · Ruleta</title>
-<link rel="stylesheet" href="styles.css?v=3">
+<title>Entre Dos · Ruletas</title>
+<link rel="stylesheet" href="styles.css?v=4">
 </head>
 <body>
+
+<section id="homeScreen" class="mode-screen">
+  <div class="app home-app">
+    <div class="topbar">
+      <div class="brand">ENTRE <span>DOS</span></div>
+      <div class="badge">ELIGE UN MODO</div>
+    </div>
+
+    <section class="panel home-panel">
+      <div class="eyebrow">Partida privada</div>
+      <h1>¿Cómo quieren jugar?</h1>
+      <p class="sub">Elijan una ruleta. Cada modo conserva su propio progreso y sus propias opciones.</p>
+
+      <div class="mode-grid">
+        <button id="openGameMode" class="mode-card" type="button">
+          <span class="mode-card-kicker">MODO 1</span>
+          <strong>Ruleta juego</strong>
+          <span>La ruleta que ya conocen, con sus retos actuales y editor de tarjetas.</span>
+        </button>
+
+        <button id="openPositionsMode" class="mode-card" type="button">
+          <span class="mode-card-kicker">MODO 2</span>
+          <strong>Ruleta posiciones</strong>
+          <span>Posiciones al azar con frase e imagen de referencia.</span>
+        </button>
+      </div>
+    </section>
+  </div>
+</section>
+
+<section id="gameScreen" class="mode-screen" hidden>
 <div class="app">
+  <div class="mode-nav"><button id="backFromGame" class="back-btn" type="button">← Inicio</button></div>
   <div class="topbar">
     <div class="brand">ENTRE <span>DOS</span></div>
     <div id="deckBadge" class="badge">RULETA · 25 RETOS</div>
@@ -69,6 +101,80 @@
     </div>
   </section>
 </div>
+</section>
+
+<section id="positionsScreen" class="mode-screen" hidden>
+  <div class="app">
+    <div class="mode-nav"><button id="backFromPositions" class="back-btn" type="button">← Inicio</button></div>
+    <div class="topbar">
+      <div class="brand">ENTRE <span>DOS</span></div>
+      <div id="positionBadge" class="badge">POSICIONES</div>
+    </div>
+
+    <section class="panel setup positions-setup">
+      <div class="eyebrow">Ruleta posiciones</div>
+      <h1>Elijan una posición</h1>
+      <p class="sub">Cada posición sale una sola vez por partida. Cuando se seleccione, aparecerá su frase y la imagen de referencia que agregues en la carpeta de imágenes.</p>
+      <div class="players">
+        <input id="positionP1" class="input" maxlength="18" placeholder="Jugador 1" autocomplete="off">
+        <input id="positionP2" class="input" maxlength="18" placeholder="Jugador 2" autocomplete="off">
+      </div>
+    </section>
+
+    <section class="panel main positions-main">
+      <div class="turn">
+        <div>
+          <div class="eyebrow">Turno actual</div>
+          <div id="positionTurnName" class="turn-name">Jugador 1</div>
+        </div>
+        <div class="counter">
+          <strong id="positionRemain">0</strong><br>disponibles
+        </div>
+      </div>
+
+      <div class="wheel-zone">
+        <div class="pointer position-pointer"></div>
+        <div class="wheel-shell">
+          <div id="positionWheel" class="wheel position-wheel">
+            <div id="positionLabels" class="wheel-labels"></div>
+          </div>
+          <div class="hub position-hub">◇</div>
+        </div>
+      </div>
+
+      <article class="position-result" aria-live="polite">
+        <div id="positionResultType" class="type">Lista para comenzar</div>
+
+        <div class="position-image-box">
+          <img id="positionImage" alt="Imagen de referencia de la posición" hidden>
+          <div id="positionImagePlaceholder" class="position-image-placeholder">
+            <span>IMAGEN DE REFERENCIA</span>
+            <small>La imagen aparecerá aquí cuando agregues el archivo correspondiente.</small>
+          </div>
+        </div>
+
+        <h2 id="positionResultTitle">Toca “Girar posición” para comenzar.</h2>
+        <p id="positionResultText">La posición elegida desaparecerá de la ruleta para que no se repita.</p>
+        <p id="positionImagePath" class="image-path-note"></p>
+      </article>
+
+      <div class="position-actions">
+        <button id="spinPosition" class="btn primary">Girar posición</button>
+        <button id="resetPositions" class="btn">Reiniciar</button>
+      </div>
+    </section>
+
+    <section class="panel history">
+      <div class="history-head">
+        <h3>Posiciones usadas</h3>
+        <div class="history-count"><span id="positionUsedCount">0</span>/<span id="positionDeckCount">0</span></div>
+      </div>
+      <div id="positionUsedList" class="list">
+        <div class="empty">Todavía no ha salido ninguna posición.</div>
+      </div>
+    </section>
+  </div>
+</section>
 
 <div id="statusOverlay" class="overlay">
   <div class="sheet">
@@ -110,6 +216,6 @@
 
 <div id="toast" class="toast"></div>
 
-<script src="app.js?v=3" defer></script>
+<script src="app.js?v=4" defer></script>
 </body>
 </html>
