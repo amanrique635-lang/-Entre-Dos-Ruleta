@@ -392,26 +392,109 @@ resetGame(false);
 
 // ============================================================
 // NUEVO MODO: RULETA POSICIONES
-// Para agregar una imagen:
-// 1) Sube el archivo a: images/positions/
-// 2) En la tarjeta correspondiente cambia "image" por la ruta del archivo.
-// Ejemplo: image:"images/positions/pose-01.webp"
-// Los nombres y la lógica de la Ruleta juego de arriba no se modifican.
+// Las posiciones pueden usar:
+// - svg: `<svg ...></svg>` para una ilustración embebida.
+// - image: "images/positions/archivo.webp" para un archivo externo.
+// Los nombres, frases y la lógica de la Ruleta juego de arriba no se modifican.
 // ============================================================
 
 const positionCards = [
-  {type:"Frente a frente", text:"Colóquense frente a frente y ajusten la postura usando la imagen como referencia.", image:"images/positions/pose-01.webp"},
-  {type:"De lado", text:"Acomódense de lado siguiendo la orientación mostrada en la imagen de referencia.", image:"images/positions/pose-02.webp"},
-  {type:"Sentados frente a frente", text:"Siéntense frente a frente y reproduzcan la posición de referencia de la forma que les resulte cómoda.", image:"images/positions/pose-03.webp"},
-  {type:"Abrazo por detrás", text:"Colóquense uno detrás del otro y usen la imagen para ajustar la postura.", image:"images/positions/pose-04.webp"},
-  {type:"Reclinados", text:"Recuéstense siguiendo la posición mostrada y adapten el apoyo a su comodidad.", image:"images/positions/pose-05.webp"},
-  {type:"Sentado y frente a frente", text:"Una persona se sienta y la otra se coloca frente a ella siguiendo la referencia.", image:"images/positions/pose-06.webp"},
-  {type:"Cruce de piernas", text:"Acomoden las piernas como se muestra en la imagen y mantengan una postura cómoda.", image:"images/positions/pose-07.webp"},
-  {type:"Al borde", text:"Usen el borde de una superficie estable como apoyo y sigan la postura de referencia.", image:"images/positions/pose-08.webp"},
-  {type:"De espaldas", text:"Colóquense de espaldas siguiendo la orientación de la imagen de referencia.", image:"images/positions/pose-09.webp"},
-  {type:"Arrodillados frente a frente", text:"Colóquense frente a frente a la altura indicada en la imagen y ajusten la postura con comodidad.", image:"images/positions/pose-10.webp"},
-  {type:"Abrazo lateral", text:"Acomódense lado a lado siguiendo la referencia y mantengan el contacto cercano.", image:"images/positions/pose-11.webp"},
-  {type:"Posición libre guiada", text:"Reproduzcan la posición mostrada en la imagen y adáptenla a lo que les resulte cómodo.", image:"images/positions/pose-12.webp"}
+  {
+    id: "poses-01",
+    type: "El Loto Profundo",
+    text: "Él sentado con las piernas cruzadas; ella se sienta sobre su regazo de frente, rodeando su cintura con las piernas para mantener un contacto pecho a pecho y un roce directo.",
+    illustration: "poseLoto",
+    for: "both",
+    svg: `<svg viewBox="0 0 320 220" role="img" aria-label="El Loto Profundo"><defs><linearGradient id="pg" x1="0" x2="1"><stop stop-color="#ff4f96"/><stop offset="1" stop-color="#b05cff"/></linearGradient></defs><circle cx="125" cy="54" r="12" fill="#38509a"/><path d="M 125 72 L 125 116 L 95 142 M 125 106 L 163 124" stroke="#38509a" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="180" cy="54" r="12" fill="#ff4f96"/><path d="M 180 72 L 180 116 L 150 142 M 180 106 L 218 124" stroke="#ff4f96" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M142 96 Q155 108 170 96" stroke="#f4a4c6" stroke-width="6" fill="none" stroke-linecap="round"/></svg>`
+  },
+  {
+    id: "poses-02",
+    type: "Acceso Abierto",
+    text: "Ella se recuesta boca arriba al borde de la cama dejando caer las piernas; él se sitúa de pie o arrodillado frente a ella con un ángulo abierto y directo.",
+    illustration: "poseAccesoAbierto",
+    for: "both",
+    svg: `<svg viewBox="0 0 320 220" role="img" aria-label="Acceso Abierto"><line x1="40" y1="135" x2="180" y2="135" stroke="rgba(255,255,255,.2)" stroke-width="6" stroke-linecap="round"/><circle cx="70" cy="95" r="11.52" fill="#ff4f96"/><path d="M 83 106.52 Q 123.5 122.36 150.14 125.96 M 122.36 123.08 L 164.14 141.8" stroke="#ff4f96" stroke-width="10.08" stroke-linecap="round" fill="none"/><circle cx="205" cy="75" r="12" fill="#38509a"/><path d="M 205 95 L 205 140 L 230 160 M 205 120 L 183 135" stroke="#38509a" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`
+  },
+  {
+    id: "poses-03",
+    type: "Piernas al Hombro",
+    text: "Ella se recuesta boca arriba y eleva sus piernas apoyándolas firmemente sobre los hombros de él, logrando un ángulo abierto y expuesto.",
+    illustration: "posePiernasHombro",
+    for: "both",
+    svg: `<svg viewBox="0 0 320 220" role="img" aria-label="Piernas al Hombro"><circle cx="80" cy="105" r="12" fill="#ff4f96"/><path d="M 93 117 Q 135 133.5 162.7 137.25 M 135 134.25 L 178.5 153.75" stroke="#ff4f96" stroke-width="10.5" stroke-linecap="round" fill="none"/><path d="M140 120 L185 85" stroke="#ff4f96" stroke-width="14" stroke-linecap="round"/><circle cx="210" cy="75" r="12" fill="#38509a"/><path d="M 210 95 L 210 140 L 235 160 M 210 120 L 188 135" stroke="#38509a" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`
+  },
+  {
+    id: "poses-04",
+    type: "En Cuatro",
+    text: "Ella se apoya firme sobre sus manos y rodillas en la cama; él se coloca arrodillado justo detrás sujetándola de las caderas para marcar el ritmo.",
+    illustration: "poseEnCuatro",
+    for: "both",
+    svg: `<svg viewBox="0 0 320 220" role="img" aria-label="En Cuatro"><circle cx="70" cy="100" r="11.2" fill="#ff4f96"/><path d="M 85 112.6 L 120 115.4 M 95 114 L 95 145.5 M 116 115.4 L 116 145.5" stroke="#ff4f96" stroke-width="9.8" stroke-linecap="round" fill="none"/><circle cx="185" cy="80" r="12" fill="#38509a"/><path d="M 185 100 L 185 145 L 210 165 M 185 125 L 163 140" stroke="#38509a" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M165 110 Q145 115 130 105" stroke="#f4a4c6" stroke-width="5" fill="none" stroke-linecap="round"/></svg>`
+  },
+  {
+    id: "poses-05",
+    type: "La Cucharita Intensa",
+    text: "Ambos recostados de lado mirando en la misma dirección; él se pega por completo a la espalda de ella rodeándola con sus brazos para un roce constante.",
+    illustration: "poseCucharita",
+    for: "both",
+    svg: `<svg viewBox="0 0 320 220" role="img" aria-label="La Cucharita Intensa"><circle cx="80" cy="105" r="12" fill="#38509a"/><path d="M 93 117 Q 135 133.5 162.7 137.25 M 135 134.25 L 178.5 153.75" stroke="#38509a" stroke-width="10.5" stroke-linecap="round" fill="none"/><circle cx="110" cy="90" r="12" fill="#ff4f96"/><path d="M 123 102 Q 165 118.5 192.7 122.25 M 165 119.25 L 208.5 138.75" stroke="#ff4f96" stroke-width="10.5" stroke-linecap="round" fill="none"/><path d="M110 120 Q135 128 155 118" stroke="#f4a4c6" stroke-width="6" fill="none" stroke-linecap="round"/></svg>`
+  },
+  {
+    id: "poses-06",
+    type: "La Misionera Elevada",
+    text: "Ella se recuesta boca arriba con una almohada bajo sus caderas para elevar la pelvis; él se coloca encima apoyando sus brazos a los lados cara a cara.",
+    illustration: "poseMisioneraElevada",
+    for: "both",
+    svg: `<svg viewBox="0 0 320 220" role="img" aria-label="La Misionera Elevada"><ellipse cx="115" cy="142" rx="30" ry="10" fill="rgba(255,255,255,.25)"/><circle cx="75" cy="95" r="12" fill="#ff4f96"/><path d="M 88 107 Q 130 123.5 157.7 127.25 M 130 124.25 L 173.5 143.75" stroke="#ff4f96" stroke-width="10.5" stroke-linecap="round" fill="none"/><circle cx="105" cy="70" r="12" fill="#38509a"/><path d="M 118 82 Q 160 98.5 187.7 102.25 M 160 99.25 L 203.5 118.75" stroke="#38509a" stroke-width="10.5" stroke-linecap="round" fill="none"/></svg>`
+  },
+  {
+    id: "poses-07",
+    type: "El Jinete Invertido",
+    text: "Él se recuesta boca arriba; ella se sube a horcajadas sobre sus caderas pero dándole la espalda, mientras él aprovecha para acariciar sus caderas y glúteos.",
+    illustration: "poseJineteInvertido",
+    for: "both",
+    svg: `<svg viewBox="0 0 320 220" role="img" aria-label="El Jinete Invertido"><circle cx="80" cy="110" r="12" fill="#38509a"/><path d="M 93 122 Q 135 138.5 162.7 142.25 M 135 139.25 L 178.5 158.75" stroke="#38509a" stroke-width="10.5" stroke-linecap="round" fill="none"/><circle cx="155" cy="65" r="11.52" fill="#ff4f96"/><path d="M 155 77.96 L 155 109.64 L 133.4 128.36 M 155 102.44 L 182.36 115.4" stroke="#ff4f96" stroke-width="10.08" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`
+  },
+  {
+    id: "poses-08",
+    type: "Fricción de Pie",
+    text: "Ella se apoya de espaldas contra la pared; él se acerca de frente, levanta una de sus piernas para sostenerla por el muslo y mantiene el contacto estrecho.",
+    illustration: "posePared",
+    for: "both",
+    svg: `<svg viewBox="0 0 320 220" role="img" aria-label="Fricción de Pie"><line x1="220" y1="30" x2="220" y2="190" stroke="rgba(255,255,255,.2)" stroke-width="6"/><circle cx="190" cy="48" r="12" fill="#ff4f96"/><path d="M 190 63 L 190 106.5 M 190 81.75 L 169 97.5 M 190 81.75 L 211 97.5 M 190 106.5 L 173.5 138 M 190 106.5 L 206.5 138" stroke="#ff4f96" stroke-width="10.5" stroke-linecap="round" fill="none"/><circle cx="135" cy="48" r="12" fill="#38509a"/><path d="M 135 63 L 135 106.5 M 135 81.75 L 114 97.5 M 135 81.75 L 156 97.5 M 135 106.5 L 118.5 138 M 135 106.5 L 151.5 138" stroke="#38509a" stroke-width="10.5" stroke-linecap="round" fill="none"/><path d="M185 115 Q160 100 145 115" stroke="#ff4f96" stroke-width="12" fill="none" stroke-linecap="round"/></svg>`
+  },
+  {
+    id: "poses-09",
+    type: "Ángulo Oral Abierto",
+    text: "Ella se sienta al borde de la cama con las piernas abiertas; él se arrodilla directamente entre sus muslos para darle placer oral con la boca.",
+    illustration: "poseTronoOral",
+    for: "both",
+    svg: `<svg viewBox="0 0 320 220" role="img" aria-label="Trono Oral"><line x1="50" y1="130" x2="160" y2="130" stroke="rgba(255,255,255,.2)" stroke-width="6"/><circle cx="95" cy="60" r="12" fill="#ff4f96"/><path d="M 95 73.5 L 95 106.5 L 72.5 126 M 95 99 L 123.5 112.5" stroke="#ff4f96" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="180" cy="95" r="11.52" fill="#38509a"/><path d="M 180 114.4 L 180 157.6 L 204 176.8 M 180 138.4 L 158.8 152.8" stroke="#38509a" stroke-width="10.08" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M165 115 L130 115" stroke="#f4a4c6" stroke-width="4" stroke-dasharray="4 4"/></svg>`
+  },
+  {
+    id: "poses-10",
+    type: "Apertura Lateral",
+    text: "Ambos recostados de lado frente a frente; ella levanta la pierna superior y la apoya sobre la cadera de él, dejando un espacio apretado para besarse y frotarse.",
+    illustration: "poseAperturaLateral",
+    for: "both",
+    svg: `<svg viewBox="0 0 320 220" role="img" aria-label="Apertura Lateral"><circle cx="75" cy="100" r="12" fill="#38509a"/><path d="M 88 112 Q 130 128.5 157.7 132.25 M 130 129.25 L 173.5 148.75" stroke="#38509a" stroke-width="10.5" stroke-linecap="round" fill="none"/><circle cx="115" cy="80" r="12" fill="#ff4f96"/><path d="M 128 92 Q 170 108.5 197.7 112.25 M 170 109.25 L 213.5 128.75" stroke="#ff4f96" stroke-width="10.5" stroke-linecap="round" fill="none"/><path d="M140 100 Q120 75 100 95" stroke="#ff4f96" stroke-width="12" fill="none" stroke-linecap="round"/></svg>`
+  },
+  {
+    id: "poses-11",
+    type: "Rostro en la Intimidad",
+    text: "Él se recuesta boca arriba en la cama; ella se coloca de rodillas entre sus piernas e inclina su torso para darle sexo oral a un ritmo constante.",
+    illustration: "poseOralAEl",
+    for: "both",
+    svg: `<svg viewBox="0 0 320 220" role="img" aria-label="Oral a Él"><circle cx="75" cy="110" r="12" fill="#38509a"/><path d="M 88 122 Q 130 138.5 157.7 142.25 M 130 139.25 L 173.5 158.75" stroke="#38509a" stroke-width="10.5" stroke-linecap="round" fill="none"/><circle cx="145" cy="80" r="11.52" fill="#ff4f96"/><path d="M 145 99.4 L 145 142.6 L 169 161.8 M 145 123.4 L 123.8 137.8" stroke="#ff4f96" stroke-width="10.08" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M130 100 L105 115" stroke="#f4a4c6" stroke-width="4" stroke-dasharray="4 4"/></svg>`
+  },
+  {
+    id: "poses-12",
+    type: "El 69 Simultáneo",
+    text: "Ambos recostados en posición invertida, la cabeza de uno frente a los genitales del otro, entregándose a un placer oral simultáneo y sincronizado.",
+    illustration: "pose69Simultaneo",
+    for: "both",
+    svg: `<svg viewBox="0 0 320 220" role="img" aria-label="69 Simultáneo"><circle cx="80" cy="110" r="12" fill="#38509a"/><path d="M 93 122 Q 135 138.5 162.7 142.25 M 135 139.25 L 178.5 158.75" stroke="#38509a" stroke-width="10.5" stroke-linecap="round" fill="none"/><g transform="translate(240,160) rotate(180)"><circle cx="80" cy="110" r="12" fill="#ff4f96"/><path d="M 93 122 Q 135 138.5 162.7 142.25 M 135 139.25 L 178.5 158.75" stroke="#ff4f96" stroke-width="10.5" stroke-linecap="round" fill="none"/></g></svg>`
+  }
 ];
 
 let positionAvailable = [];
@@ -436,6 +519,7 @@ const positionUsedCount = $("#positionUsedCount");
 const positionDeckCount = $("#positionDeckCount");
 const positionBadge = $("#positionBadge");
 const positionImage = $("#positionImage");
+const positionSvg = $("#positionSvg");
 const positionImagePlaceholder = $("#positionImagePlaceholder");
 const positionImagePath = $("#positionImagePath");
 const positionP1 = $("#positionP1");
@@ -517,9 +601,15 @@ function updatePositions() {
   }
 }
 
-function clearPositionImage(message = "La imagen aparecerá aquí cuando agregues el archivo correspondiente.") {
+function clearPositionImage(message = "La referencia visual aparecerá aquí al seleccionar una posición.") {
   positionImage.hidden = true;
   positionImage.removeAttribute("src");
+  positionImage.onload = null;
+  positionImage.onerror = null;
+
+  positionSvg.hidden = true;
+  positionSvg.innerHTML = "";
+
   positionImagePlaceholder.hidden = false;
   const small = positionImagePlaceholder.querySelector("small");
   if (small) small.textContent = message;
@@ -527,8 +617,16 @@ function clearPositionImage(message = "La imagen aparecerá aquí cuando agregue
 
 function loadPositionImage(card) {
   clearPositionImage();
-  positionImagePath.textContent = card.image ? `Archivo: ${card.image}` : "Sin imagen configurada";
 
+  if (card.svg) {
+    positionSvg.innerHTML = card.svg;
+    positionSvg.hidden = false;
+    positionImagePlaceholder.hidden = true;
+    positionImagePath.textContent = "Ilustración SVG integrada";
+    return;
+  }
+
+  positionImagePath.textContent = card.image ? `Archivo: ${card.image}` : "Sin imagen configurada";
   if (!card.image) return;
 
   positionImage.onload = () => {
@@ -541,7 +639,7 @@ function loadPositionImage(card) {
     positionImagePath.textContent = `Archivo esperado: ${card.image}`;
   };
 
-  positionImage.src = `${card.image}?v=1`;
+  positionImage.src = `${card.image}?v=2`;
 }
 
 function resetPositions(showMessage = false) {
